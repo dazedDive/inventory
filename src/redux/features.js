@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import { datas } from "../dataFakeApi/stock";
 
 const initialState = datas;
-const maxId=datas.length;
 
 const datasSlice = createSlice({
     name: 'dataManager',
@@ -17,17 +16,22 @@ const datasSlice = createSlice({
             product.price=action.payload.price
         },
         addArticle : (state,action)=>{
+            const maxId=state[state.length-1].id;
             const newProduct = {
-                id: maxId,
-                product: action.payload,
-                quantity: action.payload,
-                price: action.payload
+                id: maxId+1,
+                product: action.payload.product,
+                quantity: action.payload.quantity,
+                price: action.payload.price
             }
-            state.push(newProduct)
-        }
+            state.push(newProduct);
+        },
+        delArticle : (state,action)=>{
+            console.log(action.payload)
+            return state = state.filter(p=>p.id !== action.payload)
+        },
     }
 })
 
 export default datasSlice.reducer
-export const {editQty,editPrice,addArticle} = datasSlice.actions
+export const {editQty, editPrice, addArticle, delArticle} = datasSlice.actions
 
