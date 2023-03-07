@@ -4,10 +4,12 @@ import { editPrice,editQty,addArticle, delArticle } from '../redux/features';
 import { RiSave3Fill, RiDeleteBin2Line } from "react-icons/ri";
 import { MdAddCircle } from "react-icons/md"
 import { Formik, Form, Field } from 'formik';
-
+import { ToastContainer } from 'react-toastify';
+import Notify from './Notify';
 
 const Contents = () => {
     const dispatch = useDispatch();
+
     const [productQuantity, setProductQuantity] = useState(1)
     const [productPrice, setProductPrice] = useState()
     const [addArticleField,setAddArticleField] = useState(false)
@@ -31,6 +33,7 @@ const Contents = () => {
                         quantity: '',
                       }}
                       onSubmit={(values)=>{
+                        Notify('add','',values.designation)
                         dispatch(addArticle({
                                             product:values.designation,
                                             price:values.price,
@@ -71,7 +74,8 @@ const Contents = () => {
                         <td><input
                             onChange={(e)=>setProductPrice(e.target.value)}/>
                             <button type="button" className="btn btn-success mx-2"
-                                    onClick={()=>dispatch(editPrice({id:item.id, price:productPrice}))}>
+                                    onClick={()=>{Notify('price','',item.product)
+                                                    dispatch(editPrice({id:item.id, price:productPrice}))}}>
                                 <RiSave3Fill className="fs-5"/>
                             </button>
                         </td>
@@ -80,16 +84,19 @@ const Contents = () => {
                             type='number'
                             onChange={(e)=>setProductQuantity(e.target.value)}/>
                                 <button type="button" className="btn btn-success mx-2"
-                                onClick={()=>dispatch(editQty({id:item.id, quantity:productQuantity}))}>
+                                onClick={()=>{Notify('qty','',item.product)
+                                    dispatch(editQty({id:item.id, quantity:productQuantity}))}}>
                                     <RiSave3Fill className="fs-5"/>
                                 </button>
                         </td>
                         <td>
                             <button type="button" className="btn btn-danger mx-2"
-                            onClick={()=>{dispatch(delArticle(item.id))}}>
+                            onClick={()=>{Notify('del','',item.product);
+                                          dispatch(delArticle(item.id))}}>
                             <RiDeleteBin2Line
                             className="text-white fs-5"/>
                             </button>
+                            <ToastContainer/>
                         </td>
                       </tr>
                     )})}
